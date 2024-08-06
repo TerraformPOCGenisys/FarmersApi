@@ -1,39 +1,35 @@
+using Genisys.Farmers.Api.Model;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add CORS services
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", builder =>
     {
         builder
-            .AllowAnyOrigin() // Allow requests from any origin
-            .AllowAnyMethod() // Allow any HTTP method
-            .AllowAnyHeader(); // Allow any headers
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
     });
 });
 
-// Register services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Enable CORS
 app.UseCors("AllowAll");
 
-// Enable Swagger
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// Sample data for farmers
+// Sample data for farmers and products
 var farmers = new List<Farmer>
 {
     new() {
@@ -41,16 +37,24 @@ var farmers = new List<Farmer>
         Name = "John Doe",
         FarmName = "Doe Farm",
         Location = "Green Valley",
-        Products = ["Apples", "Carrots", "Honey"],
-        Contact = "john@example.com"
+        Contact = "john@example.com",
+        Products =
+        [
+            new Product { Id = 1, Name = "Apples", Price = 1.99m, Description = "Fresh apples" },
+            new Product { Id = 2, Name = "Honey", Price = 5.99m, Description = "Natural honey" }
+        ]
     },
     new() {
         Id = 2,
         Name = "Jane Smith",
         FarmName = "Smith Orchard",
         Location = "Sunshine Hills",
-        Products = ["Berries", "Peaches", "Jam"],
-        Contact = "jane@example.com"
+        Contact = "jane@example.com",
+        Products =
+        [
+            new Product { Id = 3, Name = "Peaches", Price = 2.99m, Description = "Juicy peaches" },
+            new Product { Id = 4, Name = "Jam", Price = 4.99m, Description = "Homemade jam" }
+        ]
     }
 };
 
@@ -67,9 +71,35 @@ app.MapGet("/api/farmers/{id}", (int id) =>
 // POST /api/farmers - Add a new farmer
 app.MapPost("/api/farmers", (Farmer newFarmer) =>
 {
-    newFarmer.Id = farmers.Count == 0 ? 1 : farmers.Max(f => f.Id) + 1;
+    newFarmer.Id = farmers.Any() ? farmers.Max(f => f.Id) + 1 : 1;
     farmers.Add(newFarmer);
     return Results.Created($"/api/farmers/{newFarmer.Id}", newFarmer);
+});
+
+// GET /api/farmers/{farmerId}/products - Get products for a specific farmer
+app.MapGet("/api/farmers/{farmerId}/products", (int farmerId) =>
+{
+    var farmer = farmers.FirstOrDefault(f => f.Id == farmerId);
+    return farmer is not null ? Results.Ok(farmer.Products) : Results.NotFound();
+});
+
+// POST /api/farmers/{farmerId}/products - Add a product to a specific farmer
+app.MapPost("/api/farmers/{farmerId}/products", (int farmerId, Product newProduct) =>
+{
+    var farmer = farmers.FirstOrDefault(f => f.Id == farmerId);
+    if (farmer is null) return Results.NotFound();
+
+    newProduct.Id = farmer.Products.Any() ? farmer.Products.Max(p => p.Id) + 1 : 1;
+    newProduct.FarmerId = farmerId;
+    farmer.Products.Add(newProduct);
+    return Results.Created($"/api/farmers/{farmerId}/products/{newProduct.Id}", newProduct);
+});
+
+// GET /api/products - Retrieve all products
+app.MapGet("/api/products", () =>
+{
+    var allProducts = farmers.SelectMany(f => f.Products).ToList();
+    return Results.Ok(allProducts);
 });
 
 app.Run();

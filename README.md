@@ -51,3 +51,9 @@ To run the API locally, use the following command:
 
 ```bash
 dotnet run
+
+
+## Use case for AMS Integration
+**On board Farmer from AMS and send email**:
+**Mark Product as InActive(out of stock)**:
+**Update Product**:
