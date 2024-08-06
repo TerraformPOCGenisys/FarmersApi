@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{468D8BDA-F98D-4719-89AB-88C16D37852C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genisys.Farmers.Api", "src\Genisys.Farmers.Api\Genisys.Farmers.Api.csproj", "{59370FC9-9092-4413-B7DC-F68B41DB23CF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{59370FC9-9092-4413-B7DC-F68B41DB23CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59370FC9-9092-4413-B7DC-F68B41DB23CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59370FC9-9092-4413-B7DC-F68B41DB23CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59370FC9-9092-4413-B7DC-F68B41DB23CF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{59370FC9-9092-4413-B7DC-F68B41DB23CF} = {468D8BDA-F98D-4719-89AB-88C16D37852C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6141DD33-117A-468F-B099-C9DE74678344}
+	EndGlobalSection
+EndGlobal
