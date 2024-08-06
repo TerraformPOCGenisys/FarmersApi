@@ -1,5 +1,6 @@
 using Genisys.Farmers.Api.Model;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -40,7 +41,7 @@ var farmers = new List<Farmer>
         Contact = "john@example.com",
         Products =
         [
-            new Product { Id = 1, Name = "Apples", Price = 1.99m, Description = "Fresh apples" },
+            new Product { Id = 1, Name = "Apples", Price = 1.99m, Description = "Fresh apples", IsInStock = true },
             new Product { Id = 2, Name = "Honey", Price = 5.99m, Description = "Natural honey" }
         ]
     },
@@ -53,7 +54,7 @@ var farmers = new List<Farmer>
         Products =
         [
             new Product { Id = 3, Name = "Peaches", Price = 2.99m, Description = "Juicy peaches" },
-            new Product { Id = 4, Name = "Jam", Price = 4.99m, Description = "Homemade jam" }
+            new Product { Id = 4, Name = "Jam", Price = 4.99m, Description = "Homemade jam", IsInStock = true }
         ]
     }
 };
@@ -100,6 +101,32 @@ app.MapGet("/api/products", () =>
 {
     var allProducts = farmers.SelectMany(f => f.Products).ToList();
     return Results.Ok(allProducts);
+});
+
+// PUT /api/products/{id}/out-of-stock - Mark a product as out of stock
+app.MapPut("/api/products/{id}/out-of-stock", (int id) =>
+{
+    var product = farmers.SelectMany(f => f.Products).FirstOrDefault(p => p.Id == id);
+    if (product is null)
+    {
+        return Results.NotFound();
+    }
+
+    product.IsInStock = false; // Mark as out of stock
+    return Results.Ok(product);
+});
+
+// PUT /api/products/{id}/description - Update a product's description
+app.MapPut("/api/products/{id}/description", (int id, [FromBody] string newDescription) =>
+{
+    var product = farmers.SelectMany(f => f.Products).FirstOrDefault(p => p.Id == id);
+    if (product is null)
+    {
+        return Results.NotFound();
+    }
+
+    product.Description = newDescription; // Update the description
+    return Results.Ok(product);
 });
 
 app.Run();
