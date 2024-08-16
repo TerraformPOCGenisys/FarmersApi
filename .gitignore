@@ -1,2 +1,3 @@
 src/Genisys.Farmers.Api/bin
 src/Genisys.Farmers.Api/obj
+.vscode/settings.json

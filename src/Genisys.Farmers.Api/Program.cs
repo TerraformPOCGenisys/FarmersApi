@@ -129,4 +129,17 @@ app.MapPut("/api/products/{id}/description", (int id, [FromBody] string newDescr
     return Results.Ok(product);
 });
 
+// POST /api/products/description - Update a product's description
+app.MapPost("/api/products/description", (UpdateProduct updateProduct) =>
+{
+    var product = farmers.SelectMany(f => f.Products).FirstOrDefault(p => p.Name == updateProduct.Name);
+    if (product is null)
+    {
+        return Results.NotFound();
+    }
+
+    product.Description = updateProduct.Description; // Update the description
+    return Results.Ok(product);
+});
+
 app.Run();
