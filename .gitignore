@@ -1,3 +1,5 @@
 src/Genisys.Farmers.Api/bin
 src/Genisys.Farmers.Api/obj
 .vscode/settings.json
+.vs
+src/Genisys.Farmers.Api/Genisys.Farmers.Api.csproj.user

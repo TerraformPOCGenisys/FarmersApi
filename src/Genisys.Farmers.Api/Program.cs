@@ -1,8 +1,6 @@
+using System.Text.Json;
 using Genisys.Farmers.Api.Model;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,6 +56,15 @@ var farmers = new List<Farmer>
         ]
     }
 };
+string bbProductJson = File.ReadAllText("BBProducts.json");
+var bbProducts = JsonSerializer.Deserialize<List<BBProduct>>(bbProductJson, new JsonSerializerOptions
+{
+    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+    WriteIndented = true
+});
+
+// GET /api/bbProducts - Return the list of farmers
+app.MapGet("/api/bbproducts", () => bbProducts);
 
 // GET /api/farmers - Return the list of farmers
 app.MapGet("/api/farmers", () => farmers);
