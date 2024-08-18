@@ -66,6 +66,19 @@ var bbProducts = JsonSerializer.Deserialize<List<BBProduct>>(bbProductJson, new 
 // GET /api/bbProducts - Return the list of farmers
 app.MapGet("/api/bbproducts", () => bbProducts);
 
+// POST /api/products/description - Update a product's description
+app.MapPost("/api/products/description", (UpdateProduct updateProduct) =>
+{
+    var bbProduct = bbProducts.FirstOrDefault(p => p.Title == updateProduct.Name);
+    if (bbProduct is null)
+    {
+        return Results.NotFound();
+    }
+
+    bbProduct.Body = updateProduct.Description; // Update the description
+    return Results.Ok(bbProduct);
+});
+
 // GET /api/farmers - Return the list of farmers
 app.MapGet("/api/farmers", () => farmers);
 
@@ -133,19 +146,6 @@ app.MapPut("/api/products/{id}/description", (int id, [FromBody] string newDescr
     }
 
     product.Description = newDescription; // Update the description
-    return Results.Ok(product);
-});
-
-// POST /api/products/description - Update a product's description
-app.MapPost("/api/products/description", (UpdateProduct updateProduct) =>
-{
-    var product = farmers.SelectMany(f => f.Products).FirstOrDefault(p => p.Name == updateProduct.Name);
-    if (product is null)
-    {
-        return Results.NotFound();
-    }
-
-    product.Description = updateProduct.Description; // Update the description
     return Results.Ok(product);
 });
 
