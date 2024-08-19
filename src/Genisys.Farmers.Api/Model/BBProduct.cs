@@ -6,7 +6,7 @@ public record BBProduct
     public required string Body { get; set; }
     public required Rating Rating { get; init; }
     public required string Quantity { get; init; }
-    public decimal Price { get; init; }
+    public decimal Price { get; set; }
     public required string Img { get; init; }
     public required string Category { get; init; }
 }

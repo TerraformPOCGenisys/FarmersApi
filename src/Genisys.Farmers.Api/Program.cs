@@ -67,15 +67,28 @@ var bbProducts = JsonSerializer.Deserialize<List<BBProduct>>(bbProductJson, new 
 app.MapGet("/api/bbproducts", () => bbProducts);
 
 // POST /api/products/description - Update a product's description
-app.MapPost("/api/products/description", (UpdateProduct updateProduct) =>
+app.MapPost("/api/products/description", (UpdateProductDescription updateProduct) =>
 {
-    var bbProduct = bbProducts.FirstOrDefault(p => p.Title == updateProduct.Name);
+    var bbProduct = bbProducts?.FirstOrDefault(p => p.Title == updateProduct.Name);
     if (bbProduct is null)
     {
         return Results.NotFound();
     }
 
     bbProduct.Body = updateProduct.Description; // Update the description
+    return Results.Ok(bbProduct);
+});
+
+// POST /api/products/price - Update a product's price
+app.MapPost("/api/products/price", (UpdateProductPrice updateProductPrice) =>
+{
+    var bbProduct = bbProducts?.FirstOrDefault(p => p.Title == updateProductPrice.Name);
+    if (bbProduct is null)
+    {
+        return Results.NotFound();
+    }
+
+    bbProduct.Price = updateProductPrice.Price; // Update the description
     return Results.Ok(bbProduct);
 });
 
