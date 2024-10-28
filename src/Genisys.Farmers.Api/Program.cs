@@ -80,6 +80,7 @@ foreach (var file in Directory.GetFiles(previousDirectory))
 {
     Console.WriteLine(Path.GetFileName(file));
 }
+Thread.Sleep(TimeSpan.FromSeconds(30));
 // string filepath = File.Exists("BBProducts.json") ? "BBProducts.json" : Path.Combine(AppContext.BaseDirectory, "publish", "BBProducts.json");
 string bbProductJson = File.ReadAllText("BBProducts.json");
 try
