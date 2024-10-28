@@ -35,7 +35,7 @@ jobs:
     steps:
       - name: Start .NET 8 API in Codespaces
         run: |
-          dotnet ~/.codespaces/.persistedshare/published-api/YourAppName.dll
+          dotnet ~/.codespaces/.persistedshare/published-api/Genisys.Farmers.Api.dll
         env:
           ASPNETCORE_ENVIRONMENT: Production
           PORT: 8080
