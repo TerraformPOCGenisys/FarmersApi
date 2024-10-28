@@ -1,7 +1,7 @@
 name: Deploy .NET 8 API to Codespaces
 
 on:
-  workflow_dispatch:  # Allows manual trigger from GitHub Actions tab
+  workflow_dispatch:  # Manual trigger
 
 jobs:
   build:
@@ -22,11 +22,18 @@ jobs:
       - name: Build the API
         run: dotnet build --configuration Release --no-restore
 
+      - name: Run tests
+        run: dotnet test --no-restore --verbosity normal
+
       - name: Publish to Codespaces
         run: |
           dotnet publish -c Release -o publish
+          echo "Listing files in publish directory:"
+          ls publish
           mkdir -p ~/.codespaces/.persistedshare/published-api
           cp -r publish/* ~/.codespaces/.persistedshare/published-api
+          echo "Listing files in persisted share directory:"
+          ls ~/.codespaces/.persistedshare/published-api
 
   deploy:
     runs-on: ubuntu-latest
@@ -35,6 +42,7 @@ jobs:
     steps:
       - name: Start .NET 8 API in Codespaces
         run: |
+          ls ~/.codespaces/.persistedshare/published-api
           dotnet ~/.codespaces/.persistedshare/published-api/Genisys.Farmers.Api.dll
         env:
           ASPNETCORE_ENVIRONMENT: Production
