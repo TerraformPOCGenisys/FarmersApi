@@ -56,7 +56,30 @@ var farmers = new List<Farmer>
         ]
     }
 };
+// Get the current directory
+string currentDirectory = Directory.GetCurrentDirectory();
+Console.WriteLine($"Current Directory: {currentDirectory}");
 
+// List files in the current directory
+Console.WriteLine("Files in Current Directory:");
+foreach (var file in Directory.GetFiles(currentDirectory))
+{
+    Console.WriteLine(Path.GetFileName(file));
+}
+
+// Get the parent directory (previous directory)
+string previousDirectory = Directory.GetParent(currentDirectory).FullName;
+
+// // Change the current directory to the previous directory
+// Directory.SetCurrentDirectory(previousDirectory);
+// Console.WriteLine($"\nChanged to Previous Directory: {Directory.GetCurrentDirectory()}");
+
+// List files in the parent directory
+Console.WriteLine("Files in Parent Directory:");
+foreach (var file in Directory.GetFiles(previousDirectory))
+{
+    Console.WriteLine(Path.GetFileName(file));
+}
 // string filepath = File.Exists("BBProducts.json") ? "BBProducts.json" : Path.Combine(AppContext.BaseDirectory, "publish", "BBProducts.json");
 string bbProductJson = File.ReadAllText("BBProducts.json");
 try
