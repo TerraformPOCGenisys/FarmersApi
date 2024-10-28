@@ -17,17 +17,17 @@ jobs:
           dotnet-version: '8.x'
 
       - name: Restore dependencies
-        run: dotnet restore Genisys.Farmers.Api.csproj
+        run: dotnet restore src/Genisys.Farmers.Api/Genisys.Farmers.Api.csproj
 
       - name: Build the API
-        run: dotnet build Genisys.Farmers.Api.csproj --configuration Release --no-restore
+        run: dotnet build src/Genisys.Farmers.Api/Genisys.Farmers.Api.csproj --configuration Release --no-restore
 
       - name: Run tests
         run: dotnet test --no-restore --verbosity normal
 
       - name: Publish API
         run: |
-          dotnet publish Genisys.Farmers.Api.csproj -c Release -o ./publish
+          dotnet publish src/Genisys.Farmers.Api/Genisys.Farmers.Api.csproj -c Release -o ./publish
           echo "Listing files in publish directory:"
           ls -al ./publish
 
