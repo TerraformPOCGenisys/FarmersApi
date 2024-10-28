@@ -25,15 +25,18 @@ jobs:
       - name: Run tests
         run: dotnet test --no-restore --verbosity normal
 
-      - name: Publish to Codespaces
+      - name: Publish API
         run: |
-          dotnet publish -c Release -o publish
+          dotnet publish -c Release -o ./publish
           echo "Listing files in publish directory:"
-          ls publish
+          ls -al ./publish
+
+      - name: Ensure Codespaces Directory Exists and Copy Files
+        run: |
           mkdir -p ~/.codespaces/.persistedshare/published-api
-          cp -r publish/* ~/.codespaces/.persistedshare/published-api
+          cp -r ./publish/* ~/.codespaces/.persistedshare/published-api
           echo "Listing files in persisted share directory:"
-          ls ~/.codespaces/.persistedshare/published-api
+          ls -al ~/.codespaces/.persistedshare/published-api
 
   deploy:
     runs-on: ubuntu-latest
@@ -42,7 +45,8 @@ jobs:
     steps:
       - name: Start .NET 8 API in Codespaces
         run: |
-          ls ~/.codespaces/.persistedshare/published-api
+          echo "Verifying contents of persisted share directory:"
+          ls -al ~/.codespaces/.persistedshare/published-api
           dotnet ~/.codespaces/.persistedshare/published-api/Genisys.Farmers.Api.dll
         env:
           ASPNETCORE_ENVIRONMENT: Production
