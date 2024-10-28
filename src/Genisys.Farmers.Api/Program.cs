@@ -57,8 +57,8 @@ var farmers = new List<Farmer>
     }
 };
 
-string filepath = File.Exists("BBProducts.json") ? "BBProducts.json" : Path.Combine(AppContext.BaseDirectory, "publish", "BBProducts.json");
-string bbProductJson = File.ReadAllText(filepath);
+// string filepath = File.Exists("BBProducts.json") ? "BBProducts.json" : Path.Combine(AppContext.BaseDirectory, "publish", "BBProducts.json");
+string bbProductJson = File.ReadAllText("BBProducts.json");
 var bbProducts = JsonSerializer.Deserialize<List<BBProduct>>(bbProductJson, new JsonSerializerOptions
 {
     PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
