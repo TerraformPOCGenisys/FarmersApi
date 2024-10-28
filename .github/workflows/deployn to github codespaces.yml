@@ -17,37 +17,30 @@ jobs:
           dotnet-version: '8.x'
 
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore Genisys.Farmers.Api/Genisys.Farmers.Api.csproj
 
       - name: Build the API
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build Genisys.Farmers.Api/Genisys.Farmers.Api.csproj --configuration Release --no-restore
 
       - name: Run tests
         run: dotnet test --no-restore --verbosity normal
 
       - name: Publish API
         run: |
-          dotnet publish -c Release -o ./publish
+          dotnet publish Genisys.Farmers.Api/Genisys.Farmers.Api.csproj -c Release -o ./publish
           echo "Listing files in publish directory:"
           ls -al ./publish
-
-      - name: Ensure Codespaces Directory Exists and Copy Files
-        run: |
-          mkdir -p ~/.codespaces/.persistedshare/published-api
-          cp -r ./publish/* ~/.codespaces/.persistedshare/published-api
-          echo "Listing files in persisted share directory:"
-          ls -al ~/.codespaces/.persistedshare/published-api
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
 
     steps:
-      - name: Start .NET 8 API in Codespaces
+      - name: Start .NET 8 API
         run: |
-          echo "Verifying contents of persisted share directory:"
-          ls -al ~/.codespaces/.persistedshare/published-api
-          dotnet ~/.codespaces/.persistedshare/published-api/Genisys.Farmers.Api.dll
+          echo "Verifying contents of the publish directory:"
+          ls -al ./publish
+          dotnet ./publish/Genisys.Farmers.Api.dll
         env:
           ASPNETCORE_ENVIRONMENT: Production
           PORT: 8080
