@@ -39,8 +39,8 @@ jobs:
       - name: Start .NET 8 API
         run: |
           echo "Verifying contents of the publish directory:"
-          ls -al ./publish
-          dotnet ./publish/Genisys.Farmers.Api.dll
+          ls -al home/runner/work/FarmersApi/FarmersApi/publish/
+          dotnet home/runner/work/FarmersApi/FarmersApi/publish/Genisys.Farmers.Api.dll
         env:
           ASPNETCORE_ENVIRONMENT: Production
           PORT: 8080
