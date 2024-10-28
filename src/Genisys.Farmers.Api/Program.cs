@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text.Json;
 using Genisys.Farmers.Api.Model;
 using Microsoft.AspNetCore.Mvc;
@@ -56,44 +57,9 @@ var farmers = new List<Farmer>
         ]
     }
 };
-// Get the current directory
-string currentDirectory = Directory.GetCurrentDirectory();
-Console.WriteLine($"Current Directory: {currentDirectory}");
+// Access the embedded JSON file
+string bbProductJson = GetEmbeddedJson("Genisys.Farmers.Api.BBProducts.json");
 
-// List files in the current directory
-Console.WriteLine("Files in Current Directory:");
-foreach (var file in Directory.GetFiles(currentDirectory))
-{
-    Console.WriteLine(Path.GetFileName(file));
-}
-
-// Get the parent directory (previous directory)
-string previousDirectory = Directory.GetParent(currentDirectory).FullName;
-
-// // Change the current directory to the previous directory
-// Directory.SetCurrentDirectory(previousDirectory);
-// Console.WriteLine($"\nChanged to Previous Directory: {Directory.GetCurrentDirectory()}");
-
-// List files in the parent directory
-Console.WriteLine("Files in Parent Directory:");
-foreach (var file in Directory.GetFiles(previousDirectory))
-{
-    Console.WriteLine(Path.GetFileName(file));
-}
-Thread.Sleep(TimeSpan.FromSeconds(30));
-// string filepath = File.Exists("BBProducts.json") ? "BBProducts.json" : Path.Combine(AppContext.BaseDirectory, "publish", "BBProducts.json");
-string bbProductJson = File.ReadAllText("BBProducts.json");
-try
-{
-    // Try reading from the default location
-    bbProductJson = File.ReadAllText("BBProducts.json");
-}
-catch (FileNotFoundException)
-{
-    // If the file is not found, try the publish folder
-    string publishPath = Path.Combine(AppContext.BaseDirectory, "publish", "BBProducts.json");
-    bbProductJson = File.ReadAllText(publishPath);
-}
 var bbProducts = JsonSerializer.Deserialize<List<BBProduct>>(bbProductJson, new JsonSerializerOptions
 {
     PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -200,3 +166,23 @@ app.MapPut("/api/products/{id}/description", (int id, [FromBody] string newDescr
 });
 
 app.Run();
+
+static string GetEmbeddedJson(string resourceName)
+    {
+        // Get the current assembly
+        var assembly = Assembly.GetExecutingAssembly();
+        
+        // Open the stream for the embedded resource
+        using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+        {
+            if (stream == null)
+            {
+                throw new FileNotFoundException($"Resource '{resourceName}' not found.");
+            }
+
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
+        }
+    }
