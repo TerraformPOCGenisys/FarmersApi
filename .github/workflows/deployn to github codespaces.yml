@@ -30,18 +30,13 @@ jobs:
           dotnet publish src/Genisys.Farmers.Api/Genisys.Farmers.Api.csproj -c Release -o ./publish
           echo "Listing files in publish directory:"
           ls -al ./publish
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-      - name: Start .NET 8 API
+          
+      - name: Deploy .NET 8 API
         run: |
           echo "Verifying contents of the publish directory:"
-          ls -al /home/runner/work/FarmersApi/FarmersApi/publish/
-          dotnet /home/runner/work/FarmersApi/FarmersApi/publish/Genisys.Farmers.Api.dll
+          ls -al ./publish
+          dotnet ./publish/Genisys.Farmers.Api.dll
         env:
           ASPNETCORE_ENVIRONMENT: Production
           PORT: 8080
-          CODESPACES: true
+          CODESPACES: true    
